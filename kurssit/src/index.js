@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import Kurssi from './components/Kurssi'
 
 const App = () => {
   const kurssit = [
@@ -41,43 +42,6 @@ const App = () => {
       ]
     }
   ];
-
-  const Otsikko = ({ kurssi }) => {
-    return <h1>{kurssi.nimi}</h1>;
-  };
-
-  const Sisalto = ({ kurssi }) => {
-    return <div>{kurssi.osat.map(osa => <Osa key={osa.id} osa={osa} />)}</div>;
-  };
-
-  const Osa = ({ osa }) => {
-    return (
-      <p>
-        {osa.nimi} {osa.tehtavia}
-      </p>
-    );
-  };
-
-  const Yhteensa = ({ kurssi }) => {
-    const reducer = (accumulator, currentValue) => accumulator + currentValue;
-    const tehtavat = kurssi.osat.map(osa => osa.tehtavia);
-    const tehtavatYhteensa = tehtavat.reduce(reducer);
-    return (
-      <div>
-        <p>yhteensä {tehtavatYhteensa} tehtävää</p>
-      </div>
-    );
-  };
-
-  const Kurssi = ({ kurssi }) => {
-    return (
-      <div>
-        <Otsikko kurssi={kurssi} />
-        <Sisalto kurssi={kurssi} />
-        <Yhteensa kurssi={kurssi} />
-      </div>
-    );
-  };
 
   const Kurssit = () => {
     return (

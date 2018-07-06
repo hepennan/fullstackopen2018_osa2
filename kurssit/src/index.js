@@ -24,6 +24,13 @@ const App = () => {
         ]
     }
 
+    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+
+    const tehtavat = kurssi.osat.map(osa => osa.tehtavia);
+
+    const tehtavatYhteensa = tehtavat.reduce(reducer)
+    console.log(tehtavatYhteensa)
+
     const Otsikko = () => {
         return (
             <h1>{kurssi.nimi}</h1>
@@ -44,11 +51,20 @@ const App = () => {
         )
     }
 
+    const Yhteensa = () => {
+        return(
+            <div>
+                <p>yhteensä {tehtavatYhteensa} tehtävää</p>
+            </div>
+        )
+    }
+
     const Kurssi = () => {
         return (
             <div>
                 <Otsikko />
                 <Sisalto />
+                <Yhteensa />
             </div>
         )
     }

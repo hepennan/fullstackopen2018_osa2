@@ -1,7 +1,6 @@
 import React from "react";
 
-const Kurssi = ({kurssi}) => {
-
+const Kurssi = ({ kurssi }) => {
   const Otsikko = ({ kurssi }) => {
     return <h1>{kurssi.nimi}</h1>;
   };
@@ -29,15 +28,13 @@ const Kurssi = ({kurssi}) => {
     );
   };
 
-
-    return (
-      <div>
-        <Otsikko kurssi={kurssi} />
-        <Sisalto kurssi={kurssi} />
-        <Yhteensa kurssi={kurssi} />
-      </div>
-    );
+  return (
+    <div>
+      <Otsikko kurssi={kurssi} />
+      <Sisalto kurssi={kurssi} />
+      <Yhteensa kurssi={kurssi} />
+    </div>
+  );
 };
 
-export default Kurssi
-
+export default Kurssi;

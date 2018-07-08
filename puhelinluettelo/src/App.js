@@ -26,7 +26,7 @@ class App extends React.Component {
   addNumber = event => {
     event.preventDefault();
     const names = this.state.persons.map(person => person.name);
-    if (names.indexOf(this.state.name) === -1) {
+    if (names.indexOf(this.state.newPerson.name) === -1) {
       const person = this.state.newPerson;
       const persons = this.state.persons.concat(person);
       const newPerson = {

@@ -14,10 +14,9 @@ class App extends React.Component {
           number: "1234567"
         }
       ],
-      newPerson: {
-        name: "",
-        number: ""
-      }
+      newName: "",
+      newNumber: "",
+      filter: ""
     };
     this.addNumber = this.addNumber.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -26,38 +25,34 @@ class App extends React.Component {
   addNumber = event => {
     event.preventDefault();
     const names = this.state.persons.map(person => person.name);
-    if (names.indexOf(this.state.newPerson.name) === -1) {
-      const person = this.state.newPerson;
-      const persons = this.state.persons.concat(person);
+    if (names.indexOf(this.state.newName) === -1) {
       const newPerson = {
-        name: "",
-        number: ""
+        name: this.state.newName,
+        number: this.state.newNumber
       };
+      const persons = this.state.persons.concat(newPerson);
       this.setState({
         persons: persons,
-        newPerson: newPerson
+        newName: "",
+        newNumber: ""
       });
     }
   };
 
   handleChange = event => {
     if (event.target.name === "name") {
-      const uusi = {
-        name: event.target.value,
-        number: this.state.newPerson.number
-      };
-
       this.setState({
-        newPerson: uusi
+        newName: event.target.value
       });
-    } else {
-      const uusi2 = {
-        name: this.state.newPerson.name,
-        number: event.target.value
-      };
-
+    }
+    if (event.target.name === "number") {
       this.setState({
-        newPerson: uusi2
+        newNumber: event.target.value
+      });
+    }
+    if (event.target.name === "filter") {
+      this.setState({
+        filter: event.target.value
       });
     }
   };
@@ -65,15 +60,21 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h2>Puhelinluettelo</h2>
-
+        <h1>Puhelinluettelo</h1>
+        <form>
+          <div>
+            rajaa näytettäviä
+            <input name="filter" onChange={this.handleChange} />
+          </div>
+        </form>
+        <h2>Lisää uusi</h2>
         <form onSubmit={this.addNumber}>
           <div>
             nimi:
             <input
               name="name"
               id="name"
-              value={this.state.newPerson.name}
+              value={this.state.newName}
               onChange={this.handleChange}
             />
           </div>
@@ -82,7 +83,7 @@ class App extends React.Component {
             <input
               name="number"
               id="number"
-              value={this.state.newPerson.number}
+              value={this.state.newNumber}
               onChange={this.handleChange}
             />
           </div>
@@ -92,12 +93,15 @@ class App extends React.Component {
         </form>
 
         <h2>Numerot</h2>
-        {this.state.persons.map(p => (
-          <p key={p.name}>
-            {" "}
-            {p.name} {p.number}
-          </p>
-        ))}
+
+        {this.state.persons
+          .filter(n => n.name.indexOf(this.state.filter) > -1)
+          .map(p => (
+            <p key={p.name}>
+              {" "}
+              {p.name} {p.number}
+            </p>
+          ))}
       </div>
     );
   }

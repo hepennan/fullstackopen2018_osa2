@@ -11,14 +11,17 @@ class App extends React.Component {
 
   addNumber = event => {
     event.preventDefault();
-    const person = {
-      name: this.state.newName
-    };
-    const persons = this.state.persons.concat(person);
-    this.setState({
-      persons: persons,
-      newName: ""
-    });
+    const names = this.state.persons.map(person => person.name);
+    if (names.indexOf(this.state.newName) === -1) {
+      const person = {
+        name: this.state.newName
+      };
+      const persons = this.state.persons.concat(person);
+      this.setState({
+        persons: persons,
+        newName: ""
+      });
+    }
   };
 
   handleChange = event => {

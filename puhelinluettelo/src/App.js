@@ -1,4 +1,6 @@
 import React from "react";
+import FilterByName from "./components/FilterByName";
+import AddNew from "./components/AddNew";
 
 class App extends React.Component {
   constructor(props) {
@@ -57,45 +59,22 @@ class App extends React.Component {
     }
   };
 
+
+
   render() {
     return (
       <div>
         <h1>Puhelinluettelo</h1>
-        <form>
-          <div>
-            rajaa näytettäviä
-            <input name="filter" onChange={this.handleChange} />
-          </div>
-        </form>
-        <h2>Lisää uusi</h2>
-        <form onSubmit={this.addNumber}>
-          <div>
-            nimi:
-            <input
-              name="name"
-              id="name"
-              value={this.state.newName}
-              onChange={this.handleChange}
-            />
-          </div>
-          <div>
-            numero:
-            <input
-              name="number"
-              id="number"
-              value={this.state.newNumber}
-              onChange={this.handleChange}
-            />
-          </div>
-          <div>
-            <button type="submit">lisää</button>
-          </div>
-        </form>
+        <FilterByName handler = {this}/>
+        <AddNew handler = {this} />
 
         <h2>Numerot</h2>
 
         {this.state.persons
-          .filter(n => n.name.indexOf(this.state.filter) > -1)
+          .filter(
+            n =>
+              n.name.toLowerCase().indexOf(this.state.filter.toLowerCase()) > -1
+          )
           .map(p => (
             <p key={p.name}>
               {" "}
@@ -106,5 +85,6 @@ class App extends React.Component {
     );
   }
 }
+
 
 export default App;

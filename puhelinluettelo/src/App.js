@@ -1,4 +1,5 @@
 import React from "react";
+import axios from 'axios';
 import FilterByName from "./components/FilterByName";
 import AddNew from "./components/AddNew";
 
@@ -6,22 +7,14 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      persons: [
-        {
-          name: "Arto Hellas",
-          number: "1234567"
-        },
-        {
-          name: "Helena",
-          number: "1234567"
-        }
-      ],
+      persons: [],
       newName: "",
       newNumber: "",
       filter: ""
     };
     this.addNumber = this.addNumber.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    console.log('constructor')
   }
 
   addNumber = event => {
@@ -59,9 +52,18 @@ class App extends React.Component {
     }
   };
 
-
+  componentDidMount() {
+    console.log('did mount');
+    axios
+    .get('http://localhost:3001/persons')
+    .then(response => {
+      console.log('promise fulfilled')
+      this.setState({ persons: response.data})
+    })
+  }
 
   render() {
+    console.log('render');
     return (
       <div>
         <h1>Puhelinluettelo</h1>

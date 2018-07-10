@@ -1,7 +1,7 @@
 import React from "react";
-import axios from 'axios';
 import FilterByName from "./components/FilterByName";
 import AddNew from "./components/AddNew";
+import personService from "./services/persons";
 
 class App extends React.Component {
   constructor(props) {
@@ -12,12 +12,11 @@ class App extends React.Component {
       newNumber: "",
       filter: ""
     };
-    this.addNumber = this.addNumber.bind(this);
+    this.addPerson = this.addPerson.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    console.log('constructor')
   }
 
-  addNumber = event => {
+  addPerson = event => {
     event.preventDefault();
     const names = this.state.persons.map(person => person.name);
     if (names.indexOf(this.state.newName) === -1) {
@@ -25,11 +24,12 @@ class App extends React.Component {
         name: this.state.newName,
         number: this.state.newNumber
       };
-      const persons = this.state.persons.concat(newPerson);
-      this.setState({
-        persons: persons,
-        newName: "",
-        newNumber: ""
+      personService.create(newPerson).then(newPerson => {
+        this.setState({
+          persons: this.state.persons.concat(newPerson),
+          newName: "",
+          newNumber: ""
+        });
       });
     }
   };
@@ -53,22 +53,17 @@ class App extends React.Component {
   };
 
   componentDidMount() {
-    console.log('did mount');
-    axios
-    .get('http://localhost:3001/persons')
-    .then(response => {
-      console.log('promise fulfilled')
-      this.setState({ persons: response.data})
-    })
+    personService.getAll().then(response => {
+      this.setState({ persons: response });
+    });
   }
 
   render() {
-    console.log('render');
     return (
       <div>
         <h1>Puhelinluettelo</h1>
-        <FilterByName handler = {this}/>
-        <AddNew handler = {this} />
+        <FilterByName handler={this} />
+        <AddNew handler={this} />
 
         <h2>Numerot</h2>
 
@@ -87,6 +82,5 @@ class App extends React.Component {
     );
   }
 }
-
 
 export default App;

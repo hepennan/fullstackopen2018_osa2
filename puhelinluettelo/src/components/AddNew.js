@@ -4,7 +4,7 @@ const AddNew = ({ handler }) => {
   return (
       <div>
     <h2>Lisää uusi</h2>
-    <form onSubmit={handler.addNumber}>
+    <form onSubmit={handler.addPerson}>
       <div>
         nimi:
         <input

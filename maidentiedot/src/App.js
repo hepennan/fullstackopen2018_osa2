@@ -27,11 +27,39 @@ class App extends Component {
     });
   };
 
+  selectCountry (countryName) {
+    const filtered = this.state.allCountries.filter(
+      country =>
+        country.name.toLowerCase().indexOf(countryName.toLowerCase()) >
+        -1
+    );
+
+    this.setState({
+      filteredCountries: filtered,
+      filter: countryName
+    });
+  }
+
   componentDidMount() {
     axios.get("https://restcountries.eu/rest/v2/all").then(response => {
       this.setState({ allCountries: response.data });
     });
   }
+
+  Countries = props => {
+    if (props.list.length === 1) {
+      return <Country list={props.list} />;
+    }
+    if (props.list.length > 10) {
+      return <div>too many matches, specify another filter</div>;
+    } else {
+      return (
+        <div>
+          {props.list.map(country => <p key={country.name} onClick= {() => this.selectCountry(country.name)}>{country.name}</p>)}
+        </div>
+      );
+    }
+  };
 
   render() {
     return (
@@ -39,29 +67,16 @@ class App extends Component {
         <div>
           <form>
             find countries:
-            <input name="filter" onChange={this.handleChange} />{" "}
+            <input name="filter" onChange={this.handleChange} />{' '}
           </form>
         </div>
 
-        <Countries list={this.state.filteredCountries} />
+        <this.Countries list={this.state.filteredCountries} />
       </div>
     );
   }
 }
 
-const Countries = props => {
-  if (props.list.length === 1) {
-    return <Country list={props.list} />;
-  }
-  if (props.list.length > 10) {
-    return <div>too many matches, specify another filter</div>;
-  } else {
-    return (
-      <div>
-        {props.list.map(country => <p key={country.name}>{country.name}</p>)}
-      </div>
-    );
-  }
-};
+
 
 export default App;

@@ -16,10 +16,23 @@ class App extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
+  //**method checks if person with name exists. If yes, its id is returned, otherwise -1 */
+  personIdForName(name) {
+    const person = this.state.persons.find(
+      person => person.name.toLowerCase() === name.toLowerCase()
+    );
+    if (person != null) {
+      return person.id;
+    } else {
+      return -1;
+    }
+  }
+
+  //**if person with name does not exist, it is added. Otherwise person's number is updated locally and on the server */
   addPerson = event => {
     event.preventDefault();
-    const names = this.state.persons.map(person => person.name);
-    if (names.indexOf(this.state.newName) === -1) {
+    const id = this.personIdForName(this.state.newName);
+    if (id === -1) {
       const newPerson = {
         name: this.state.newName,
         number: this.state.newNumber
@@ -31,8 +44,53 @@ class App extends React.Component {
           newNumber: ""
         });
       });
+    } else {
+      const replaceOldWithNew = window.confirm(
+        this.state.newName.concat(
+          " on jo luettelossa, korvataanko vanha numero uudella?"
+        )
+      );
+      if (replaceOldWithNew) {
+        const modifiedPerson = {
+          name: this.state.newName,
+          number: this.state.newNumber,
+          id: id
+        };
+
+        const copyOfPersons = this.state.persons.map(person => {
+          if (person.id === id) {
+            person.number = this.state.newNumber;
+          }
+          return person;
+        });
+        this.setState({
+          persons: copyOfPersons
+        });
+
+        personService.modify(modifiedPerson).then(response => {
+          console.log(response.name);
+        });
+      }
     }
   };
+
+  removeLocal(personId){
+    const newPersons = this.state.persons.filter(person => person.id !== personId)
+    this.setState({
+      persons : newPersons
+    })
+  }
+
+  removePerson(person) {
+    const saaPoistaa = window.confirm(
+      "Poistetaanko ".concat(person.name).concat("?")
+    );
+    if (saaPoistaa) {
+      personService.remove(person.id).then(() => {
+        this.removeLocal(person.id)
+        });
+    }
+  }
 
   handleChange = event => {
     if (event.target.name === "name") {
@@ -66,18 +124,33 @@ class App extends React.Component {
         <AddNew handler={this} />
 
         <h2>Numerot</h2>
-
-        {this.state.persons
-          .filter(
-            n =>
-              n.name.toLowerCase().indexOf(this.state.filter.toLowerCase()) > -1
-          )
-          .map(p => (
-            <p key={p.name}>
-              {" "}
-              {p.name} {p.number}
-            </p>
-          ))}
+        <table>
+          <tbody>
+            {this.state.persons
+              .filter(
+                person =>
+                  person.name
+                    .toLowerCase()
+                    .indexOf(this.state.filter.toLowerCase()) > -1
+              )
+              .map(person => (
+                <tr key={person.name}>
+                  <td> {person.name}</td>
+                  <td> {person.number} </td>
+                  <td>
+                    <form>
+                      <button
+                        type="button"
+                        onClick={() => this.removePerson(person)}
+                      >
+                        poista
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
       </div>
     );
   }

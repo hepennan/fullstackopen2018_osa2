@@ -5,7 +5,7 @@ const FilterByName = ({handler}) => {
     return(
       <form>
       <div>
-        rajaa näytettäviä
+        rajaa näytettäviä :
         <input name="filter" onChange={handler.handleChange} />
       </div>
     </form>

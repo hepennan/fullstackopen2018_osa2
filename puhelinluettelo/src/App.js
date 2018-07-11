@@ -21,11 +21,7 @@ class App extends React.Component {
     const person = this.state.persons.find(
       person => person.name.toLowerCase() === name.toLowerCase()
     );
-    if (person != null) {
-      return person.id;
-    } else {
-      return -1;
-    }
+    return(person!=null ? person.id : -1)
   }
 
   //**if person with name does not exist, it is added. Otherwise person's number is updated locally and on the server */
@@ -68,16 +64,15 @@ class App extends React.Component {
         });
 
         personService.modify(modifiedPerson).then(response => {
-          console.log(response.name);
+          console.log(response.name, ' modified');
         });
       }
     }
   };
 
   removeLocal(personId){
-    const newPersons = this.state.persons.filter(person => person.id !== personId)
     this.setState({
-      persons : newPersons
+        persons : this.state.persons.filter(person => person.id !== personId)
     })
   }
 

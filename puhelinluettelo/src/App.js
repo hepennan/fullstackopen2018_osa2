@@ -2,7 +2,9 @@ import React from "react";
 import FilterByName from "./components/FilterByName";
 import AddNew from "./components/AddNew";
 import Numerot from "./components/Numerot";
+import Notification from "./components/Notification";
 import personService from "./services/persons";
+import "./index.css";
 
 class App extends React.Component {
   constructor(props) {
@@ -11,18 +13,24 @@ class App extends React.Component {
       persons: [],
       newName: "",
       newNumber: "",
-      filter: ""
+      filter: "",
+      message: null
     };
     this.addPerson = this.addPerson.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
+  showMessage() {
+    setTimeout(() => {
+      this.setState({ message: null });
+    }, 5000);
+  }
   //**method checks if person with name exists. If yes, its id is returned, otherwise -1 */
   personIdForName(name) {
     const person = this.state.persons.find(
       person => person.name.toLowerCase() === name.toLowerCase()
     );
-    return(person!=null ? person.id : -1)
+    return person != null ? person.id : -1;
   }
 
   //**if person with name does not exist, it is added. Otherwise person's number is updated locally and on the server */
@@ -37,6 +45,10 @@ class App extends React.Component {
       personService.create(newPerson).then(newPerson => {
         this.setState({
           persons: this.state.persons.concat(newPerson),
+          message: "lisättiin ".concat(this.state.newName)
+        });
+        this.showMessage();
+        this.setState({
           newName: "",
           newNumber: ""
         });
@@ -60,21 +72,26 @@ class App extends React.Component {
           }
           return person;
         });
-        this.setState({
-          persons: copyOfPersons
-        });
 
         personService.modify(modifiedPerson).then(response => {
-          console.log(response.name, ' modified');
+          this.setState({
+            persons: copyOfPersons,
+            message: this.state.newName.concat(": numero muutettiin ")
+          });
+          this.showMessage();
+          this.setState({
+            newName: "",
+            newNumber: ""
+          });
         });
       }
     }
   };
 
-  removeLocal(personId){
+  removeLocal(personId) {
     this.setState({
-        persons : this.state.persons.filter(person => person.id !== personId)
-    })
+      persons: this.state.persons.filter(person => person.id !== personId)
+    });
   }
 
   removePerson(person) {
@@ -83,8 +100,12 @@ class App extends React.Component {
     );
     if (saaPoistaa) {
       personService.remove(person.id).then(() => {
-        this.removeLocal(person.id)
+        this.removeLocal(person.id);
+        this.setState({
+          message: "poistettiin ".concat(person.name)
         });
+        this.showMessage();
+      });
     }
   }
 
@@ -112,21 +133,17 @@ class App extends React.Component {
     });
   }
 
-
-
   render() {
     return (
       <div>
+        <Notification message={this.state.message} />
         <h1>Puhelinluettelo</h1>
         <FilterByName handler={this} />
         <AddNew handler={this} />
-        <Numerot handler={this}/>
-
+        <Numerot handler={this} />
       </div>
     );
   }
 }
-
-
 
 export default App;

@@ -17,18 +17,17 @@ const create = personObj => {
 };
 
 const remove = personId => {
-    const personUrl = baseUrl.concat('/').concat(personId);
-    const request = axios.delete(personUrl);
-    return request
-
-}
+  const personUrl = baseUrl.concat("/").concat(personId);
+  const request = axios.delete(personUrl);
+  return request;
+};
 
 const modify = personObj => {
-    const personUrl = baseUrl.concat('/').concat(personObj.id);
-    const request = axios.put(personUrl,personObj);
-    return request.then(response => {
-        return response.data;
-    })
-}
+  const personUrl = baseUrl.concat("/").concat(personObj.id);
+  const request = axios.put(personUrl, personObj);
+  return request.then(response => {
+    return response.data;
+  });
+};
 
 export default { getAll, create, remove, modify };

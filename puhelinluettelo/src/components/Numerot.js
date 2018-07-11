@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-const Numerot = ({handler}) =>{
-    return(
-      <div>
+const Numerot = ({ handler }) => {
+  return (
+    <div>
       <h2>Numerot</h2>
       <table>
         <tbody>
@@ -31,8 +31,8 @@ const Numerot = ({handler}) =>{
             ))}
         </tbody>
       </table>
-      </div>
-    )
-  }
+    </div>
+  );
+};
 
-  export default Numerot;
+export default Numerot;

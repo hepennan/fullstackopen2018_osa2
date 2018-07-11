@@ -4,7 +4,7 @@ const baseUrl = "http://localhost:3001/persons";
 
 const getAll = () => {
   const request = axios.get(baseUrl);
-  return request.then(response => {
+    return request.then(response => {
     return response.data;
   });
 };
@@ -27,7 +27,11 @@ const modify = personObj => {
   const request = axios.put(personUrl, personObj);
   return request.then(response => {
     return response.data;
-  });
+  }).catch(error => {
+    console.log("yritys muuttaa henkilöä, jota ei löydy serveriltä ", error);
+    console.log("lisätään henkilö ", personObj.name, " serverille")
+    create(personObj)
+  })
 };
 
 export default { getAll, create, remove, modify };

@@ -1,6 +1,7 @@
 import React from "react";
 import FilterByName from "./components/FilterByName";
 import AddNew from "./components/AddNew";
+import Numerot from "./components/Numerot";
 import personService from "./services/persons";
 
 class App extends React.Component {
@@ -111,44 +112,21 @@ class App extends React.Component {
     });
   }
 
+
+
   render() {
     return (
       <div>
         <h1>Puhelinluettelo</h1>
         <FilterByName handler={this} />
         <AddNew handler={this} />
+        <Numerot handler={this}/>
 
-        <h2>Numerot</h2>
-        <table>
-          <tbody>
-            {this.state.persons
-              .filter(
-                person =>
-                  person.name
-                    .toLowerCase()
-                    .indexOf(this.state.filter.toLowerCase()) > -1
-              )
-              .map(person => (
-                <tr key={person.name}>
-                  <td> {person.name}</td>
-                  <td> {person.number} </td>
-                  <td>
-                    <form>
-                      <button
-                        type="button"
-                        onClick={() => this.removePerson(person)}
-                      >
-                        poista
-                      </button>
-                    </form>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
       </div>
     );
   }
 }
+
+
 
 export default App;
